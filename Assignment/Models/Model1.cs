@@ -14,7 +14,7 @@ namespace Assignment.Models
 
         public virtual DbSet<Requests> Requests { get; set; }
         public virtual DbSet<Restaurants> Restaurants { get; set; }
-
+        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Restaurants>()

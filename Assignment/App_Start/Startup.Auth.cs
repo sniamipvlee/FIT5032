@@ -63,6 +63,12 @@ namespace Assignment
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "974928116050-oop0l7cb1ok20mhb8g6jbiaojqfo1dft.apps.googleusercontent.com",
+                ClientSecret = "wPOVkzLPjPDJ9vifdvl56Cvp"
+            });
         }
     }
 }

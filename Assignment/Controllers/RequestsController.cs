@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Assignment.Models;
+using FIT5032_Week08A.Utils;
 using Microsoft.AspNet.Identity;
 
 namespace Assignment.Controllers
@@ -21,6 +22,7 @@ namespace Assignment.Controllers
         {
             var userId = User.Identity.GetUserId();
             var requests = db.Requests.Where(s => s.AspNetUsersId == userId).ToList();
+
             return View(requests);
         }
 
@@ -60,6 +62,12 @@ namespace Assignment.Controllers
 
             if (ModelState.IsValid)
             {
+                String toEmail = db.AspNetUsers.Find(db.Restaurants.Find(requests.RestaurantsId).AspNetUsersId).Email;
+                String subject = "You have a new request";
+                String contents = "From: " + db.AspNetUsers.Find(User.Identity.GetUserId()).Email + "\nDate: " + requests.Date;
+                EmailSender es = new EmailSender();
+                es.Send(toEmail, subject, contents);
+                    
                 db.Requests.Add(requests);
                 db.SaveChanges();
                 return RedirectToAction("Index");

@@ -7,11 +7,13 @@
 
 <h2>Create</h2>
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Restaurants</h4>
         <hr />
@@ -27,7 +29,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control", @id = "RichText1" } })
                 @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -43,7 +45,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Latitude, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Latitude, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Latitude, new { htmlAttributes = new { @class = "form-control", id = "latitude" } })
                 @Html.ValidationMessageFor(model => model.Latitude, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -51,14 +53,16 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Longitude, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Longitude, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Longitude, new { htmlAttributes = new { @class = "form-control", id = "longitude" } })
                 @Html.ValidationMessageFor(model => model.Longitude, "", new { @class = "text-danger" })
             </div>
         </div>
 
+        <div id="map" style="width: 400px; height: 300px;" class="col-md-offset-2 col-md-10"></div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-default"/>
             </div>
         </div>
     </div>
@@ -72,7 +76,51 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script>
         tinymce.init({
-            selector : '#RichText'
+            selector: '#RichText'
+        })
+        tinymce.init({
+            selector: '#RichText1'
         })
     </script>
 }
+
+<script>
+    var mymap = L.map('map');
+    var mymaplatlng;
+    var polyline = L.polyline([], { color: 'blue' }).addTo(mymap);
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 18,
+        id: 'mapbox.streets'
+    }).addTo(mymap);
+
+    mymap.locate({
+        setView: true,
+        maxZoom: 18
+    });
+
+    mymap.on('locationfound', function (e) {
+        var pop = L.popup();
+        mymaplatlng = e.latlng;
+        pop.setLatLng(e.latlng)
+            .setContent("You are here")
+            .openOn(mymap);
+        L.marker(e.latlng).addTo(mymap);
+    });
+
+    mymap.on('locationerror', function(e) {
+        alert("Can not find your position");
+    });
+
+    mymap.on('click', function (e) {
+        var mypop = L.popup();
+        mypop.setLatLng(e.latlng)
+            .setContent("You selected location:<br>" + parseInt(e.latlng.distanceTo(mymaplatlng).toString()) + " meters away from you")
+            .openOn(mymap);
+
+        $("#latitude").val(e.latlng.lat);
+        $("#longitude").val(e.latlng.lng);
+
+        polyline.setLatLngs([e.latlng, mymaplatlng]);
+    });
+</script>

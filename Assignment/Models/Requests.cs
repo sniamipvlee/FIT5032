@@ -5,6 +5,7 @@ namespace Assignment.Models
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Web.Mvc;
 
     public partial class Requests
     {
@@ -16,6 +17,7 @@ namespace Assignment.Models
         [StringLength(128)]
         public string AspNetUsersId { get; set; }
 
+        [Display(Name = "Restaurant Name")]
         public int RestaurantsId { get; set; }
     }
 }

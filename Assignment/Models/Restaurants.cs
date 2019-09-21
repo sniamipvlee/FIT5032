@@ -15,9 +15,12 @@ namespace Assignment.Models
         public string Name { get; set; }
 
         [Required]
+        [AllowHtml]
+        [Display(Name = "Description of Location")]
         public string Location { get; set; }
 
         [AllowHtml]
+        [Display(Name = "Description of Restaurant")]
         public string Description { get; set; }
 
         public decimal? Latitude { get; set; }

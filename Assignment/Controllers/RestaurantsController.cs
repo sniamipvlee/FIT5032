@@ -19,12 +19,13 @@ namespace Assignment.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            var userId = User.Identity.GetUserId();
-            var restaurants = db.Restaurants.Where(s => s.AspNetUsersId == userId).ToList();
+            //            var userId = User.Identity.GetUserId();
+            var restaurants = db.Restaurants.ToList(); //.Where(s => s.AspNetUsersId == userId).ToList();
             return View(restaurants);
         }
 
         // GET: Restaurants/Details/5
+        [ValidateInput(true)]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -57,6 +58,7 @@ namespace Assignment.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
+        [ValidateInput(true)]
         public ActionResult Create([Bind(Include = "Id,Name,Location,Description,Latitude,Longitude,AspNetUsersId")] Restaurants restaurants)
         {
             restaurants.AspNetUsersId = User.Identity.GetUserId();

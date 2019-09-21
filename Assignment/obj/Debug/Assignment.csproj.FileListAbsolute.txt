@@ -109,3 +109,6 @@ C:\Users\HP\source\repos\Assignment\obj\Debug\Assignment.csproj.CopyComplete
 C:\Users\HP\source\repos\Assignment\obj\Debug\Assignment.dll
 C:\Users\HP\source\repos\Assignment\obj\Debug\Assignment.pdb
 C:\Users\HP\source\repos\Assignment\obj\Debug\Assignment.csprojAssemblyReference.cache
+C:\Users\HP\source\repos\Assignment\bin\SendGrid.dll
+C:\Users\HP\source\repos\Assignment\bin\SendGrid.pdb
+C:\Users\HP\source\repos\Assignment\bin\SendGrid.xml
