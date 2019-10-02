@@ -1,0 +1,110 @@
+﻿@model IEnumerable<Assignment.Models.Restaurants>
+
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Search on Map by Name</h2>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div id="map" style="width: 400px; height: 300px;" class="col-md-10"></div>
+
+    <div class="form-group">
+        <div class="col-md-10">
+            <input id="restaurantSearchTextfield" name="search" type="text" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-10">
+            <button id="searchButton" type="button">Search</button>
+            <button id="requestButton" type="button">Request</button>
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    var mymap = L.map('map');
+    var mymaplatlng;
+    var templatlng = [null, null];
+    var selectedId = 0;
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 18,
+        id: 'mapbox.streets'
+    }).addTo(mymap);
+
+    mymap.locate({
+        setView: true,
+        maxZoom: 18
+    });
+
+    mymap.on('locationfound', function (e) {
+        mymaplatlng = e.latlng;
+        @*var pop = L.popup();
+        pop.setLatLng(e.latlng)
+            .setContent("You are here")
+            .openOn(mymap);
+        L.marker(e.latlng).addTo(mymap);*@
+    });
+
+    mymap.on('locationerror', function (e) {
+        alert("Can not find your position");
+    });
+
+    $(document).ready(function(){
+        $('#searchButton').click(function () {
+            var keyword = $("#restaurantSearchTextfield").val();
+            var list = @Html.Raw(Json.Encode(ViewBag.restaurantList));
+            var isFind = false;
+
+            for (var i = 0; i < list.length; i++) {
+                if (list[i][0].indexOf(keyword) != -1) {
+                    var pop = L.popup();
+                    templatlng = [parseFloat(list[i][2]), parseFloat(list[i][3])];
+                    pop.setLatLng(templatlng)
+                        .setContent(list[i][0] + " : " + parseInt(mymaplatlng.distanceTo(templatlng).toString()) + " away from your location")
+                        .openOn(mymap);
+                    L.marker(templatlng).addTo(mymap);
+                    isFind = true;
+                    selectedId = list[i][4];
+                    break;
+                }
+            }
+
+            if (!isFind) {
+                templatlng = [null, null];
+            }
+        }); 
+
+        $('#requestButton').click(function () {
+            if (templatlng[0] != null) {
+                location.href='@Url.Action("Create", "Requests")' + '?restaurantId=' + selectedId;
+            }
+            else {
+                alert("Please search a valid restaurant");
+            }
+        });
+    });
+</script>

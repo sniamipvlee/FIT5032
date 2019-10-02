@@ -5,7 +5,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-
 namespace Assignment.Controllers
 {
     [RequireHttps]
@@ -59,6 +58,74 @@ namespace Assignment.Controllers
 
             ViewBag.names = deliverNames.Take(6);
             ViewBag.counts = deliverCounts.Take(6);
+
+            //--------------------------
+
+            var reviews = db.Reviews.ToList();
+
+            Dictionary<string, int> reviewCount = new Dictionary<string, int>();
+
+            foreach (Reviews r in reviews)
+            {
+                try
+                {
+                    string restName = "";
+                    foreach (Restaurants rest in restaurants)
+                    {
+                        if (rest.Id == r.RestaurantsId)
+                        {
+                            restName = rest.Name;
+                            break;
+                        }
+                    }
+
+                    if (reviewCount.ContainsKey(restName))
+                    {
+                        reviewCount[restName] = reviewCount[restName] + 1;
+                    }
+                    else
+                    {
+                        reviewCount.Add(restName, 1);
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+
+            var decSort2 = from rest in reviewCount orderby rest.Value descending select rest;
+            List<string> deliverNames2 = new List<string>();
+            List<int> deliverCounts2 = new List<int>();
+            foreach (var item in decSort2)
+            {
+                deliverNames2.Add(item.Key);
+                deliverCounts2.Add(item.Value);
+            }
+
+            ViewBag.names2 = deliverNames2.Take(6);
+            ViewBag.counts2 = deliverCounts2.Take(6);
+
+            //--------------------------------
+
+            List<List<string>> restaurantList = new List<List<string>>();
+            foreach (Restaurants r in restaurants)
+            {
+                try
+                {
+                    List<string> tempList = new List<string>();
+                    tempList.Add(r.Latitude.ToString());
+                    tempList.Add(r.Longitude.ToString());
+                    tempList.Add(r.Id.ToString());
+                    tempList.Add(r.Name);
+                    restaurantList.Add(tempList);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            ViewBag.restaurants = restaurantList;
 
             return View();
         }
