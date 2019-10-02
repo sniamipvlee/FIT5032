@@ -236,7 +236,7 @@
     <Compile Include="Models\Restaurants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Utils\EmailSender.cs" />
+    <Compile Include="Utils\NetMail.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\aspnet-Assignment-20190914103055.mdf" />
@@ -467,7 +467,14 @@
     <Content Include="Content\DatePicker\bootstrap-reboot.min.css.map" />
     <Content Include="Content\DatePicker\bootstrap.css.map" />
     <Content Include="Content\DatePicker\bootstrap.min.css.map" />
+    <Content Include="Scripts\chart\LICENSE.md" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\chart\Chart.bundle.js" />
+    <Content Include="Scripts\chart\Chart.bundle.min.js" />
+    <Content Include="Scripts\chart\Chart.css" />
+    <Content Include="Scripts\chart\Chart.js" />
+    <Content Include="Scripts\chart\Chart.min.css" />
+    <Content Include="Scripts\chart\Chart.min.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap4.js" />
@@ -683,6 +690,7 @@
     <Content Include="Scripts\tinymce\themes\silver\theme.min.js" />
     <Content Include="Scripts\tinymce\tinymce.js" />
     <Content Include="Scripts\tinymce\tinymce.min.js" />
+    <Content Include="Utils\Details.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -730,6 +738,7 @@
     <Content Include="Scripts\tinymce\skins\ui\oxide\fonts\tinymce-mobile.woff" />
     <Content Include="Scripts\tinymce\skins\ui\oxide-dark\fonts\tinymce-mobile.woff" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
+    <Content Include="Views\Restaurants\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

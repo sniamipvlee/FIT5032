@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity;
 
 namespace Assignment.Controllers
 {
+    [ValidateInput(true)]
     public class RestaurantsController : Controller
     {
         private Model1 db = new Model1();
@@ -25,7 +26,6 @@ namespace Assignment.Controllers
         }
 
         // GET: Restaurants/Details/5
-        [ValidateInput(true)]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -43,6 +43,8 @@ namespace Assignment.Controllers
             ViewBag.Latitude = Latitude;
             ViewBag.Longitude = Longitude;
             ViewBag.Id = restaurants.Id;
+            ViewBag.DisplayMessage = "<b>Restaurant : " + restaurants.Name + "</b><br>Hosted by : "
+                                      + db.AspNetUsers.Find(restaurants.AspNetUsersId).UserName;
             return View(restaurants);
         }
 
@@ -130,6 +132,33 @@ namespace Assignment.Controllers
             db.Restaurants.Remove(restaurants);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [Authorize]
+        public ActionResult Search()
+        {
+            var restaurants = db.Restaurants.ToList();
+            List<List<string>> restaurantList = new List<List<string>>();
+            foreach (Restaurants r in restaurants)
+            {
+                try
+                {
+                    List<string> tempList = new List<string>();
+                    tempList.Add(r.Name);
+                    tempList.Add(r.Description);
+                    tempList.Add(r.Latitude.ToString());
+                    tempList.Add(r.Longitude.ToString());
+                    tempList.Add(r.Id.ToString());
+                    restaurantList.Add(tempList);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            ViewBag.restaurantList = restaurantList;
+
+            return View();
         }
 
         protected override void Dispose(bool disposing)

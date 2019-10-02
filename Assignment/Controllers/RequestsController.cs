@@ -7,11 +7,12 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Assignment.Models;
-using FIT5032_Week08A.Utils;
+using Assignment.Utils;
 using Microsoft.AspNet.Identity;
 
 namespace Assignment.Controllers
 {
+    [ValidateInput(true)]
     public class RequestsController : Controller
     {
         private Model1 db = new Model1();
@@ -22,6 +23,20 @@ namespace Assignment.Controllers
         {
             var userId = User.Identity.GetUserId();
             var requests = db.Requests.Where(s => s.AspNetUsersId == userId).ToList();
+
+            Dictionary<int,string> restaurant = new Dictionary<int,string>();
+            foreach (Requests o in requests)
+            {
+                try
+                {
+                    restaurant.Add(o.RestaurantsId, db.Restaurants.Where(s => s.Id == o.RestaurantsId).ToList()[0].Name);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            ViewBag.restaurantNames = restaurant;
 
             return View(requests);
         }
@@ -64,9 +79,8 @@ namespace Assignment.Controllers
             {
                 String toEmail = db.AspNetUsers.Find(db.Restaurants.Find(requests.RestaurantsId).AspNetUsersId).Email;
                 String subject = "You have a new request";
-                String contents = "From: " + db.AspNetUsers.Find(User.Identity.GetUserId()).Email + "\nDate: " + requests.Date;
                 EmailSender es = new EmailSender();
-                es.Send(toEmail, subject, contents);
+                es.Send(toEmail, subject, requests.Date.ToString(), requests.Id);
                     
                 db.Requests.Add(requests);
                 db.SaveChanges();
