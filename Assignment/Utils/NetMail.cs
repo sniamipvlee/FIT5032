@@ -18,6 +18,7 @@ namespace Assignment.Utils
             file.WriteLine("Your request comes from: " + toEmail);
             file.WriteLine("The date of the appointment is: " + date);
             file.WriteLine("The serial number is: " + no);
+            file.Flush();
             file.Close();
 
             string smtpServer = "smtp.gmail.com";
@@ -44,6 +45,7 @@ namespace Assignment.Utils
             mailMessage.Attachments.Add(newAttachment);
 
             smtpClient.Send(mailMessage);
+            mailMessage.Dispose();
         }
 
     }

@@ -20,7 +20,11 @@
         public int RestaurantsId { get; set; }
 
         [AllowHtml]
-        [Display(Name = "Description of Restaurant")]
+        [Display(Name = "Review")]
         public string Description { get; set; }
+
+        [AllowHtml]
+        [Display(Name = "Your rating")]
+        public string Rate { get; set; }
     }
 }

@@ -68,7 +68,7 @@ namespace Assignment.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,AspNetUsersId,RestaurantsId,Description")] Reviews reviews, int restId)
+        public ActionResult Create([Bind(Include = "Id,AspNetUsersId,RestaurantsId,Description,Rate")] Reviews reviews, int restId)
         {
 
             reviews.AspNetUsersId = User.Identity.GetUserId();
@@ -76,6 +76,8 @@ namespace Assignment.Controllers
             TryValidateModel(reviews);
 
             reviews.RestaurantsId = restId;
+
+            reviews.Rate = Request.Form.Get("select");
 
             if (ModelState.IsValid)
             {
@@ -107,7 +109,7 @@ namespace Assignment.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,AspNetUsersId,RestaurantsId,Description")] Reviews reviews)
+        public ActionResult Edit([Bind(Include = "Id,AspNetUsersId,RestaurantsId,Description,Rate")] Reviews reviews)
         {
             if (ModelState.IsValid)
             {

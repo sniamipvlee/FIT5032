@@ -56,14 +56,41 @@ namespace Assignment.Controllers
                 deliverCounts.Add(item.Value);
             }
 
-            ViewBag.names = deliverNames.Take(6);
-            ViewBag.counts = deliverCounts.Take(6);
+            List<string> deliverNames2 = new List<string>();
+            List<int> deliverCounts2 = new List<int>();
+            List<string> deliverNames3 = new List<string>();
+            List<int> deliverCounts3 = new List<int>();
+            for (int i=0;i< deliverNames.Count;i++)
+            {
+                if (i>5 & i<12)
+                {
+                    deliverNames2.Add(deliverNames[i]);
+                    deliverCounts2.Add(deliverCounts[i]);
+                }
+                if (i>11 & i<18)
+                {
+                    deliverNames3.Add(deliverNames[i]);
+                    deliverCounts3.Add(deliverCounts[i]);
+                }
+                if (i>17)
+                {
+                    break;
+                }
+            }
+
+            ViewBag.names1 = deliverNames.Take(6);
+            ViewBag.counts1 = deliverCounts.Take(6);
+            ViewBag.names2 = deliverNames2;
+            ViewBag.counts2 = deliverCounts2;
+            ViewBag.names3 = deliverNames3;
+            ViewBag.counts3 = deliverCounts3;
 
             //--------------------------
 
             var reviews = db.Reviews.ToList();
 
             Dictionary<string, int> reviewCount = new Dictionary<string, int>();
+            Dictionary<string, int> reviewRate = new Dictionary<string, int>();
 
             foreach (Reviews r in reviews)
             {
@@ -82,10 +109,12 @@ namespace Assignment.Controllers
                     if (reviewCount.ContainsKey(restName))
                     {
                         reviewCount[restName] = reviewCount[restName] + 1;
+                        reviewRate[restName] = reviewRate[restName] + Int32.Parse(r.Rate);
                     }
                     else
                     {
                         reviewCount.Add(restName, 1);
+                        reviewRate.Add(restName, Int32.Parse(r.Rate));
                     }
                 }
                 catch (Exception e)
@@ -94,17 +123,22 @@ namespace Assignment.Controllers
                 }
             }
 
-            var decSort2 = from rest in reviewCount orderby rest.Value descending select rest;
-            List<string> deliverNames2 = new List<string>();
-            List<int> deliverCounts2 = new List<int>();
-            foreach (var item in decSort2)
+            foreach (string key in reviewCount.Keys)
             {
-                deliverNames2.Add(item.Key);
-                deliverCounts2.Add(item.Value);
+                reviewRate[key] = reviewRate[key] / reviewCount[key];
             }
 
-            ViewBag.names2 = deliverNames2.Take(6);
-            ViewBag.counts2 = deliverCounts2.Take(6);
+            var decSort_secondGraph = from rest in reviewRate orderby rest.Value descending select rest;
+            List<string> deliverNames_secondGraph = new List<string>();
+            List<int> deliverCounts_secondGraph = new List<int>();
+            foreach (var item in decSort_secondGraph)
+            {
+                deliverNames_secondGraph.Add(item.Key);
+                deliverCounts_secondGraph.Add(item.Value);
+            }
+
+            ViewBag.names_secondGraph = deliverNames_secondGraph.Take(6);
+            ViewBag.counts_secondGraph = deliverCounts_secondGraph.Take(6);
 
             //--------------------------------
 
