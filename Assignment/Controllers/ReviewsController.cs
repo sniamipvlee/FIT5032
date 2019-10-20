@@ -111,6 +111,8 @@ namespace Assignment.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,AspNetUsersId,RestaurantsId,Description,Rate")] Reviews reviews)
         {
+            reviews.Rate = Request.Form.Get("select");
+
             if (ModelState.IsValid)
             {
                 db.Entry(reviews).State = EntityState.Modified;

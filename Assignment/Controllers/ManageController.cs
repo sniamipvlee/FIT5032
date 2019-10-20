@@ -15,6 +15,7 @@ namespace Assignment.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        public static Boolean state = false;
 
         public ManageController()
         {
@@ -72,6 +73,7 @@ namespace Assignment.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
+            ViewBag.state = ManageController.state;
             return View(model);
         }
 

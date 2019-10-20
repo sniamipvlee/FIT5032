@@ -42,7 +42,7 @@
                     @Html.Raw(@ViewBag.restaurantNames[item.RestaurantsId])
                 </td>
                 <td class="col-md-4">
-                    @Html.ActionLink("Review", "Create","Reviews",new { restId = item.RestaurantsId }, null)
+                    @Html.ActionLink("Review", "Create", "Reviews", new { restId = item.RestaurantsId }, null)
                 </td>
             </tr>
         }

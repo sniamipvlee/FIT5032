@@ -45,6 +45,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="itextsharp, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>packages\iTextSharp.5.5.13.1\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="SendGrid, Version=9.12.0.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
       <HintPath>packages\Sendgrid.9.12.0\lib\net452\SendGrid.dll</HintPath>
@@ -220,6 +223,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AspNetUserRolesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RequestsController.cs" />
@@ -229,6 +233,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AspNetUserRoles.cs" />
     <Compile Include="Models\AspNetUsers.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -470,6 +475,7 @@
     <Content Include="Content\DatePicker\bootstrap.css.map" />
     <Content Include="Content\DatePicker\bootstrap.min.css.map" />
     <Content Include="Scripts\chart\LICENSE.md" />
+    <None Include="Properties\PublishProfiles\Week - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\chart\Chart.bundle.js" />
     <Content Include="Scripts\chart\Chart.bundle.min.js" />
@@ -692,7 +698,6 @@
     <Content Include="Scripts\tinymce\themes\silver\theme.min.js" />
     <Content Include="Scripts\tinymce\tinymce.js" />
     <Content Include="Scripts\tinymce\tinymce.min.js" />
-    <Content Include="Utils\Details.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -746,6 +751,13 @@
     <Content Include="Views\Reviews\Details.cshtml" />
     <Content Include="Views\Reviews\Edit.cshtml" />
     <Content Include="Views\Reviews\Index.cshtml" />
+    <Content Include="Utils\Details.pdf" />
+    <Content Include="Views\Restaurants\Manage.cshtml" />
+    <Content Include="Views\AspNetUserRoles\Create.cshtml" />
+    <Content Include="Views\AspNetUserRoles\Delete.cshtml" />
+    <Content Include="Views\AspNetUserRoles\Details.cshtml" />
+    <Content Include="Views\AspNetUserRoles\Edit.cshtml" />
+    <Content Include="Views\AspNetUserRoles\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

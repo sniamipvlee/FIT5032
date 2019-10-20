@@ -7,7 +7,6 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <script src="~/Scripts/tinymce/tinymce.min.js"></script>
-
     <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -31,14 +30,8 @@
                     <li>@Html.ActionLink("My Account", "Index", "Manage")</li>
                     <li>@Html.ActionLink("My Booking", "Index", "Requests")</li>
                     <li>@Html.ActionLink("Find on Map", "Index", "Restaurants")</li>
-                    @if(User.Identity.IsAuthenticated)
-                    {
-                        if (User.IsInRole("Owner") == true)
-                        {
-                            <li>@Html.ActionLink("Create Restaurant", "Create", "Restaurants")</li>
-                        }
-                    }
                 </ul>
+
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
@@ -55,6 +48,6 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     @Scripts.Render("~/bundles/jquery-ui")
-    @Scripts.Render("~/bundles/DatePicker")
+    @*@Scripts.Render("~/bundles/DatePicker")*@
 </body>
 </html>

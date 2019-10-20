@@ -32,8 +32,8 @@ namespace Assignment
             bundles.Add(new ScriptBundle("~/bundles/jquery-ui").Include(
                         "~/Scripts/jquery-ui-1.12.1.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/DatePicker").Include(
-                        "~/Scripts/DatePicker.js"));
+           // bundles.Add(new ScriptBundle("~/bundles/DatePicker").Include(
+           //             "~/Scripts/DatePicker.js"));
         }
     }
 }

@@ -57,8 +57,35 @@ namespace Assignment.Controllers
         }
 
         // GET: Requests/Create
-        public ActionResult Create()
+        public ActionResult Create(int restaurantId)
         {
+            var collectRequest = db.Requests.Where(s => s.RestaurantsId == restaurantId).ToList();
+            Dictionary<String,int> collects = new Dictionary<String,int>();
+            foreach (Requests r in collectRequest)
+            {
+                String date = r.Date.ToString();
+                if (collects.ContainsKey(date))
+                {
+                    collects[date] = collects[date] + 1;
+                }
+                else
+                {
+                    collects[date] = 1;
+                }
+            }
+            List<String> collectNames = new List<String>();
+            List<int> collectCounts = new List<int>();
+            foreach (var item in collects)
+            {
+                collectNames.Add(item.Key);
+                collectCounts.Add(item.Value);
+            }
+            ViewBag.requestNameList = collectNames;
+            ViewBag.requestCountList = collectCounts;
+
+            int collectSeats = db.Restaurants.Where(s => s.Id == restaurantId).ToList()[0].Seats;
+            ViewBag.totalSeat = collectSeats;
+
             return View();
         }
 
@@ -74,13 +101,15 @@ namespace Assignment.Controllers
             TryValidateModel(requests);
 
             requests.RestaurantsId = restaurantId;
+            var restaurantName = db.Restaurants.Where(s => s.Id == restaurantId).ToList()[0].Name;
 
             if (ModelState.IsValid)
             {
                 String toEmail = db.AspNetUsers.Find(db.Restaurants.Find(requests.RestaurantsId).AspNetUsersId).Email;
+                String customer = db.AspNetUsers.Find(User.Identity.GetUserId()).Email; ;
                 String subject = "You have a new request";
                 EmailSender es = new EmailSender();
-                es.Send(toEmail, subject, requests.Date.ToString(), requests.Id);
+                es.Send(toEmail, subject, requests.Date.ToString(), restaurantName,customer);
                     
                 db.Requests.Add(requests);
                 db.SaveChanges();

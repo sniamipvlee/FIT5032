@@ -30,5 +30,8 @@ namespace Assignment.Models
         [Required]
         [StringLength(128)]
         public string AspNetUsersId { get; set; }
+
+        [Range(1,9999999)]
+        public int Seats { get; set; }
     }
 }

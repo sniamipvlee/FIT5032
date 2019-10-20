@@ -1,0 +1,42 @@
+﻿@model Assignment.Models.Restaurants
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+
+<div id="map" style="width: 600px; height: 400px;"></div>
+<script>
+    var mymap = L.map('map').setView([@ViewBag.Latitude,@ViewBag.Longitude], 13);
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 18,
+        id: 'mapbox.streets'
+    }).addTo(mymap);
+
+    var popupMsg = "<b>Restaurant</b><br />Location: " + @ViewBag.Latitude + " , " + @ViewBag.Longitude;
+    L.marker([@ViewBag.Latitude,@ViewBag.Longitude]).addTo(mymap)
+        .bindPopup(popupMsg).openPopup();
+</script>
+
+<tr class="coordinates">
+    <td class="description">
+        @Html.DisplayFor(model => model.Name)
+    </td>
+    <td class="latitude">
+        @Html.DisplayFor(model => model.Latitude)
+    </td>
+    <td class="longitude">
+        @Html.DisplayFor(model => model.Longitude)
+    </td>
+</tr>
+
+<p>
+    @Html.ActionLink("Request", "Create", "Requests", new { restaurantId = @ViewBag.Id }, null) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,194 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<script src="~/Scripts/chart/Chart.js"></script>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+
+<div class="jumbotron">
+    <h1>Restaurants</h1>
+    <p class="lead">In Victoria.</p>
+    <p><a href='@Url.Action("Index", "Restaurants")' class="btn btn-primary btn-lg">Find Restaurants &raquo;</a></p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Most Popular</h2>
+        <canvas id="chart1" width="60" height="60"></canvas>
+        <p><button id="button1" type="button">Another six &raquo;</button></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Most favored</h2>
+        <canvas id="chart2" width="60" height="60"></canvas>
+        <p><button id="button2" type="button">Find Restaurants &raquo;</button></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Most Close</h2>
+        <div id="map3" style="width: 300px; height: 300px;"></div>
+        <p><button id="button3" type="button">Make Request &raquo;</button></p>
+    </div>
+</div>
+
+<script>
+    var state = 0;
+    var nameList = @Html.Raw(Json.Encode(ViewBag.names1));
+    var countList = @Html.Raw(Json.Encode(ViewBag.counts1));
+    var maxY = countList[0];
+    var config = function () {
+        return {
+            type: 'bar',
+            data: {
+                labels: nameList,
+                datasets: [{
+                    label: 'Number of Requests',
+                    data: countList,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+						    min: 0,
+                            max: maxY,
+                            stepSize: 1
+                        }
+                    }]
+                }
+            }
+        }
+    }
+
+    var myChart1 = new Chart(document.getElementById('chart1'), config());
+
+    $('#button1').click(function () {
+        if (state == 0) {
+            nameList = @Html.Raw(Json.Encode(ViewBag.names2));
+            countList = @Html.Raw(Json.Encode(ViewBag.counts2));
+        }
+        else if (state == 1) {
+            nameList = @Html.Raw(Json.Encode(ViewBag.names3));
+            countList = @Html.Raw(Json.Encode(ViewBag.counts3));
+        }
+        else {
+            nameList = @Html.Raw(Json.Encode(ViewBag.names1));
+            countList = @Html.Raw(Json.Encode(ViewBag.counts1));
+        }
+
+        myChart1.destroy();
+        myChart1 = new Chart(document.getElementById('chart1'), config());
+        state = (state + 1) % 3;
+    });
+</script>
+
+<script>
+    var nameList_secondGraph = @Html.Raw(Json.Encode(ViewBag.names_secondGraph));
+    var countList_secondGraph = @Html.Raw(Json.Encode(ViewBag.counts_secondGraph));
+    var myChart2 = new Chart(document.getElementById('chart2'), {
+        type: 'bar',
+        data: {
+            labels: nameList_secondGraph,
+            datasets: [{
+                label: 'Average Rating',
+                data: countList_secondGraph,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    $('#button2').click(function () {
+        location.href = '@Url.Action("Index", "Reviews")';
+    });
+</script>
+
+<script>
+    var mymap = L.map('map3');
+    var mymaplatlng;
+    var selectedId = 0;
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 18,
+        id: 'mapbox.streets'
+    }).addTo(mymap);
+
+    mymap.locate({
+        setView: true,
+        maxZoom: 18
+    });
+
+    mymap.on('locationfound', function (e) {
+        mymaplatlng = e.latlng;
+        let distance = 2147483647;
+        let list = @Html.Raw(Json.Encode(ViewBag.restaurants));
+        let selectedList = list[0];
+
+        for (var i = 0; i < list.length; i++) {
+            let templatlng = [parseFloat(list[i][0]), parseFloat(list[i][1])];
+            let tempdistence = mymaplatlng.distanceTo(templatlng);
+            @*tempdistence = Math.pow(list[i][0] - mymaplatlng.lat, 2) + Math.pow(list[i][1] - mymaplatlng.lng, 2);*@
+            if (tempdistence < distance) {
+                distance = tempdistence;
+                selectedList = list[i];
+            }
+        }
+
+        var pop = L.popup();
+        templatlng = [parseFloat(selectedList[0]), parseFloat(selectedList[1])];
+        pop.setLatLng(templatlng)
+            .setContent(selectedList[3] + " : " + parseInt(distance.toString()) + " meters away")
+            .openOn(mymap);
+        L.marker(templatlng).addTo(mymap);
+        selectedId = selectedList[2];
+    });
+
+    mymap.on('locationerror', function(e) {
+        alert("Can not find your position");
+    });
+
+    $('#button3').click(function () {
+        location.href='@Url.Action("Create", "Requests")' + '?restaurantId=' + selectedId;
+    });
+</script>

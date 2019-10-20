@@ -20,8 +20,18 @@ namespace Assignment.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            //            var userId = User.Identity.GetUserId();
-            var restaurants = db.Restaurants.ToList(); //.Where(s => s.AspNetUsersId == userId).ToList();
+            var restaurants = db.Restaurants.ToList();
+            return View(restaurants);
+        }
+
+        public ActionResult Manage()
+        {
+            var restaurants = db.Restaurants.ToList();
+            var id = User.Identity.GetUserId();
+            if (db.AspNetUserRoles.Where(s => s.UserId == id).ToList()[0].RoleId == "2")
+            {
+                restaurants = db.Restaurants.Where(s => s.AspNetUsersId == id).ToList();
+            }
             return View(restaurants);
         }
 
@@ -61,7 +71,7 @@ namespace Assignment.Controllers
         [Authorize]
         [ValidateAntiForgeryToken]
         [ValidateInput(true)]
-        public ActionResult Create([Bind(Include = "Id,Name,Location,Description,Latitude,Longitude,AspNetUsersId")] Restaurants restaurants)
+        public ActionResult Create([Bind(Include = "Id,Name,Location,Description,Latitude,Longitude,AspNetUsersId,Seats")] Restaurants restaurants)
         {
             restaurants.AspNetUsersId = User.Identity.GetUserId();
             ModelState.Clear();
