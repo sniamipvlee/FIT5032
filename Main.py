@@ -1,3 +1,4 @@
+import os
 import traceback
 import sys
 import pandas as pd
@@ -17,10 +18,11 @@ model_columns = joblib.load('model_columns.pkl')
 def Main():
     if lr:
         try:
-            json_ = request.json
-            query = pd.DataFrame(json_)
-            query = query[["male", "age", "currentSmoker","cigsPerDay","BPMeds","prevalentStroke","prevalentHyp","diabetes","sysBP","BMI","glucose"]]
-            a = np.array(query)
+            info = []
+            info.append(request.args.get("sex"))
+            info.append(request.args.get("age"))
+            info.append(request.args.get("currentSmoker"))
+            a = np.array(info)
             result = str(round(float(lr.predict_proba(a)[:, 1] * 100), 2)) + '%'
             return result
         except:
